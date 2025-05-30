@@ -1,0 +1,11 @@
+
+# ostree-status.service
+[Unit]
+Description=Post flatpak upgrade status
+
+[Service]
+Type=oneshot
+ExecStart=/usr/just -F /opt/os-mgmt/system.justfile check-flatpak-upgrade-status
+OnSuccess=
+OnFailure= 
+
