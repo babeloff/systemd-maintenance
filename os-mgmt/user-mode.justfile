@@ -74,3 +74,15 @@ post-pixi-upgrade-status:
 	        string:"pending"
     fi
 
+post-pixi-upgrade-status:
+    dbus-send --session \
+	    --dest=org.freedesktop.Notifications \
+	    --type=method_call \
+	    --print-reply \
+	    /org/freedesktop/Notifications \
+	    org.freedesktop.Notifications.Notify \
+	    string:"Package Manager" \
+	    uint32:0 \
+	    string:"Update Status" \
+	    string:"$Status"
+
