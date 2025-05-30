@@ -1,5 +1,4 @@
 
-check-ostree-upgrade-status:
-   /usr/bin/rpm-ostree status --json | /usr/bin/jq -e \".deployments[0].booted == false\" > /dev/null
+check-ostree-upgrade-state:
+   /usr/bin/rpm-ostree status --json | /usr/sbin/jq -e ".deployments[0].booted"
 
-   

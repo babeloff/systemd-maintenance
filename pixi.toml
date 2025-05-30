@@ -42,3 +42,13 @@ cmd = ["systemctl", "--system", "daemon-reload"]
 description = "Load user units"
 cmd = ["systemctl", "--user", "daemon-reload"]
 
+
+[tasks.sjust]
+description = "Run just task"
+cmd = ["just", "--justfile", "./os-mgmt/system-mode.justfile", "--color=always"]
+
+[tasks.ujust]
+description = "Run just task"
+cmd = ["just", "--justfile", "./os-mgmt/user-mode.justfile", "--color=always"]
+
+
