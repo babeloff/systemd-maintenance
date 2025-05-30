@@ -6,7 +6,24 @@ upgrade-flatpak:
         flatpak update -y
     fi
 
-check-flatpak-upgrade-status:
+post-flatpak-upgrade-status:
+    updates=$(flatpak remote-ls --updates)
+    if [[ -n "$updates" ]]
+    then
+        echo "Updates available:"
+        dbus-send --session \
+	        --dest=org.freedesktop.Notifications \
+	        --type=method_call \
+	        --print-reply \
+	        /org/freedesktop/Notifications \
+	        org.freedesktop.Notifications.Notify \
+	        string:"Package Manager" \
+	        uint32:0 \
+	        string:"Update Status" \
+	        string:"pending"
+    else
+        echo "No updates."
+    fi
    
 
 upgrade-brew:
@@ -15,17 +32,45 @@ upgrade-brew:
         /var/home/linuxbrew/.linuxbrew/bin/brew upgrade
     fi
 
-check-brew-upgrade-status:
-    if [[ -O /var/home/linuxbrew/.linuxbrew/bin/brew ]]
+post-brew-upgrade-status:
+    /var/home/linuxbrew/.linuxbrew/bin/brew upgrade --dry-run
+    if [[ -n "$(/var/home/linuxbrew/.linuxbrew/bin/brew outdated)" ]]
     then
-        /var/home/linuxbrew/.linuxbrew/bin/brew outdated 
+        then
+            dbus-send --session \
+	            --dest=org.freedesktop.Notifications \
+	            --type=method_call \
+	            --print-reply \
+	            /org/freedesktop/Notifications \
+	            org.freedesktop.Notifications.Notify \
+	            string:"Package Manager" \
+	            uint32:0 \
+	            string:"Update Status" \
+	            string:"pending"
+        fi
     fi
 
    
 upgrade-pixi:
     if command -v pixi &> /dev/null && [ -x "$(command -v pixi)" ]
     then
-        pixi global update
+        pixi global update 
     fi
 
-check-pixi-upgrade-status:
+post-pixi-upgrade-status:
+    if [[ pixi global update --dry-run --json | /usr/sbin/jq -e ".environment | .before.md5 == .after.md5" ]]
+    then
+        echo "no pixi updates required"
+    else
+        dbus-send --session \
+    	    --dest=org.freedesktop.Notifications \
+	        --type=method_call \
+	        --print-reply \
+	        /org/freedesktop/Notifications \
+	        org.freedesktop.Notifications.Notify \
+	        string:"Package Manager" \
+	        uint32:0 \
+	        string:"Update Status" \
+	        string:"pending"
+    fi
+
