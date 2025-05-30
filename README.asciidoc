@@ -4,7 +4,7 @@ A set of `systemctrl --system` and `systemctrl --user`` services for doing basic
 There are also some Justfile to run them.
 These are targeting project bluefin who should feel free to incorporate whichever ones they like.
 
-== Releated Work
+== Related Work
 
 I am also working on a couple of other projects related 
 to making systemd work better for me that may be somewhat relevant. 
@@ -12,3 +12,4 @@ Hopefully, I will be able to get them into a functional state.
 
 * https://github.com/babeloff/systemctl-extra
 * https://github.com/babeloff/pixi-service-generator
+* 
