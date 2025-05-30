@@ -1,0 +1,44 @@
+[workspace]
+channels = ["conda-forge"]
+name = "systemd-maintenance"
+version = "0.1.0"
+license = "MIT"
+authors = ["Fred Eisele"]
+repository = "https://github.com/babeloff/systemd-maintenance"
+description = "A tool to manage systemd services and units for maintenance tasks"
+readme = "README.asciidoc"
+license-file = "LICENSE"
+platforms = ["linux-64"]
+
+[dependencies]
+just = ">=0.11.0"
+
+
+
+[tasks.install-system-units] 
+description = "Install systemd unit files (needs root privileges)"
+cmd = ["cp", "-r", "systemd-system/*", "/etc/systemd/system/"]
+
+[tasks.install-user-units] 
+description = "Install systemd unit files"
+cmd = ["cp", "-r", "systemd-user/*", "~/.local/systemd/"]
+
+[tasks.install-units] 
+depends-on = ["install-system-units", "install-user-units"]
+description = "Install systemd unit files"
+
+
+[tasks.install-justfiles]
+description = "Install Justfiles (needs root privileges)" 
+cmd = ["cp", "-r", "os-mgmt/*", "/opt/os-mgmt/"]
+
+
+[tasks.load-system-units]
+description = "Load system units (needs root privileges)"
+cmd = ["systemctl", "--system", "daemon-reload"]
+
+
+[tasks.load-user-units]
+description = "Load user units"
+cmd = ["systemctl", "--user", "daemon-reload"]
+
